@@ -15,10 +15,10 @@ public class CarService {
     }
 
 
-    public boolean save(CarRequest carRequest) {
+    public void save(CarRequest carRequest) {
         Car car = CarMapper.mapFromDto(carRequest);
+        car.setCarFreeNow(true);
         carRepository.save(car);
-        return true;
     }
 
     public List<CarResponse> findAll() {
@@ -43,5 +43,13 @@ public class CarService {
         Car car = carRepository.findById(id)
                 .orElseThrow(CarDoesNotExists::new);
         carRepository.delete(car);
+    }
+
+    public List<CarResponse> findAllAvailableCars() {
+        return carRepository.findAll()
+                .stream()
+                .filter(Car::isCarFreeNow)
+                .map(CarMapper::mapToDto)
+                .collect(Collectors.toList());
     }
 }

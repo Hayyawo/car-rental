@@ -7,8 +7,8 @@ import java.time.LocalDate;
 @Data
 public class ReservationResponse {
     private Long id;
-    private boolean isCarFree;
     private LocalDate dateFrom;
     private LocalDate dateTo;
+    private int priceForReservation;
     private Long carId;
 }

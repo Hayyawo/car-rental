@@ -6,9 +6,8 @@ import java.time.LocalDate;
 
 @Getter
 public class ReservationRequest {
-    private Long id;
-    private boolean isCarFree;
     private LocalDate dateFrom;
     private LocalDate dateTo;
-    private int carId;
+    private int priceForReservation;
+    private Long carId;
 }

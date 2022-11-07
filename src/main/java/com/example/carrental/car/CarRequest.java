@@ -9,6 +9,7 @@ public class CarRequest {
     private Long id;
     private String name;
     private String model;
+    private boolean isCarFreeNow;
     private int price;
     private int numberOfDays;
     private int horsePower;

@@ -14,12 +14,12 @@ public class ReservationMapper {
     }
 
     public Reservation mapFromDto(ReservationRequest reservationRequest) {
-        Car car = carRepository.findById(reservationRequest.getId())
+        Car car = carRepository.findById(reservationRequest.getCarId())
                 .orElseThrow(CarDoesNotExists::new);
         return Reservation.builder()
                 .dateFrom(reservationRequest.getDateFrom())
                 .dateTo(reservationRequest.getDateTo())
-                .isCarFree(reservationRequest.isCarFree())
+                .priceForReservation(reservationRequest.getPriceForReservation())
                 .car(car)
                 .build();
     }
@@ -27,8 +27,8 @@ public class ReservationMapper {
     public ReservationResponse mapToDto(Reservation reservation) {
         return ReservationResponse.builder()
                 .id(reservation.getId())
-                .isCarFree(reservation.isCarFree())
                 .dateTo(reservation.getDateTo())
+                .priceForReservation(reservation.getPriceForReservation())
                 .dateFrom(reservation.getDateFrom())
                 .carId(reservation.getCar().getId())
                 .build();

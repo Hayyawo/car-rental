@@ -1,10 +1,7 @@
 package com.example.carrental.reservation;
 
 import com.example.carrental.car.Car;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -14,13 +11,15 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @Getter
+@Setter
+@ToString
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private boolean isCarFree;
     private LocalDate dateFrom;
     private LocalDate dateTo;
+    private int priceForReservation;
     @ManyToOne
     private Car car;
 }

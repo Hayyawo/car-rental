@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.invoke.CallSite;
 import java.util.List;
 
 @RestController
@@ -38,5 +37,8 @@ public class CarController {
         carService.delete(id);
         return true;
     }
-
+    @GetMapping("/api/available-cars")
+    public List<CarResponse> allAvailableCars(){
+        return carService.findAllAvailableCars();
+    }
 }

@@ -6,6 +6,7 @@ public class CarMapper {
                 .name(carRequest.getName())
                 .model(carRequest.getModel())
                 .price(carRequest.getPrice())
+                .isCarFreeNow(carRequest.isCarFreeNow())
                 .numberOfDays(carRequest.getNumberOfDays())
                 .horsePower(carRequest.getHorsePower())
                 .secToHundred(carRequest.getSecToHundred())
@@ -14,6 +15,7 @@ public class CarMapper {
     public static CarResponse mapToDto(Car car){
         return CarResponse.builder()
                 .id(car.getId())
+                .isCarFreeNow(car.isCarFreeNow())
                 .horsePower(car.getHorsePower())
                 .model(car.getModel())
                 .name(car.getName())
