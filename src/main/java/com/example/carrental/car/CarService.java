@@ -1,6 +1,6 @@
 package com.example.carrental.car;
 
-import com.example.carrental.car.exceptions.CarDoesNotExists;
+import com.example.carrental.exceptions.CarDoesNotExists;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -4,4 +4,6 @@ values ('Golf', '7R', 600, 30, 315, 4.8),
        ('Audi', 'RSQ8', 930, 30, 600, 3.8);
 
 insert into reservation(is_car_free, date_from, date_to, car_id)
-values (false, '2022-11-06', '2022-11-20', 1);
+values (false, '2022-11-06', '2022-11-20', 1),
+    (false , '2022-11-06', '2022-11-20', 2),
+    (false , '2022-11-05', '2022-11-06', 3);

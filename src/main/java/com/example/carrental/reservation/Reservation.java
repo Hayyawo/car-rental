@@ -3,6 +3,7 @@ package com.example.carrental.reservation;
 import com.example.carrental.car.Car;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

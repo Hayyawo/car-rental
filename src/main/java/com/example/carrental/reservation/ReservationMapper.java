@@ -2,7 +2,7 @@ package com.example.carrental.reservation;
 
 import com.example.carrental.car.Car;
 import com.example.carrental.car.CarRepository;
-import com.example.carrental.car.exceptions.CarDoesNotExists;
+import com.example.carrental.exceptions.CarDoesNotExists;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,7 +13,7 @@ public class ReservationMapper {
         this.carRepository = carRepository;
     }
 
-    public  Reservation mapFromDto(ReservationRequest reservationRequest) {
+    public Reservation mapFromDto(ReservationRequest reservationRequest) {
         Car car = carRepository.findById(reservationRequest.getId())
                 .orElseThrow(CarDoesNotExists::new);
         return Reservation.builder()
@@ -22,5 +22,16 @@ public class ReservationMapper {
                 .isCarFree(reservationRequest.isCarFree())
                 .car(car)
                 .build();
+    }
+
+    public ReservationResponse mapToDto(Reservation reservation) {
+        return ReservationResponse.builder()
+                .id(reservation.getId())
+                .isCarFree(reservation.isCarFree())
+                .dateTo(reservation.getDateTo())
+                .dateFrom(reservation.getDateFrom())
+                .carId(reservation.getCar().getId())
+                .build();
+
     }
 }
