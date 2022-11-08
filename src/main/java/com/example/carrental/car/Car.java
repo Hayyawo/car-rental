@@ -20,8 +20,7 @@ public class Car {
     private String name;
     private String model;
     private boolean isCarFreeNow;
-    private int price;
-    private int numberOfDays;
+    private int priceForDay;
     private int horsePower;
     private double secToHundred;
 

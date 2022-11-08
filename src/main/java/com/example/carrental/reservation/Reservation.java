@@ -19,7 +19,7 @@ public class Reservation {
     private Long id;
     private LocalDate dateFrom;
     private LocalDate dateTo;
-    private int priceForReservation;
+    private double priceForReservation;
     @ManyToOne
     private Car car;
 }

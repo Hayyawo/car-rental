@@ -9,6 +9,6 @@ public class ReservationResponse {
     private Long id;
     private LocalDate dateFrom;
     private LocalDate dateTo;
-    private int priceForReservation;
+    private double priceForReservation;
     private Long carId;
 }

@@ -5,9 +5,8 @@ public class CarMapper {
         return Car.builder()
                 .name(carRequest.getName())
                 .model(carRequest.getModel())
-                .price(carRequest.getPrice())
+                .priceForDay(carRequest.getPrice())
                 .isCarFreeNow(carRequest.isCarFreeNow())
-                .numberOfDays(carRequest.getNumberOfDays())
                 .horsePower(carRequest.getHorsePower())
                 .secToHundred(carRequest.getSecToHundred())
                 .build();
@@ -19,8 +18,7 @@ public class CarMapper {
                 .horsePower(car.getHorsePower())
                 .model(car.getModel())
                 .name(car.getName())
-                .numberOfDays(car.getNumberOfDays())
-                .price(car.getPrice())
+                .price(car.getPriceForDay())
                 .build();
     }
 }

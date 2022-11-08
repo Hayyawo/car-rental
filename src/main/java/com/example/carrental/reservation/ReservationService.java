@@ -24,8 +24,11 @@ public class ReservationService {
 
     public void save(ReservationRequest reservationRequest) {
         Reservation reservation = reservationMapper.mapFromDto(reservationRequest);
-        reservation.setPriceForReservation(calculatePriceForReservation(reservation));
+        double price = calculatePriceForReservation(reservation);
+        reservation.setPriceForReservation(price);
+        reservationRequest.setPriceForReservation(price);
         checkDate(reservation);
+        reservationRepository.save(reservation);
     }
 
     public List<ReservationResponse> reservationList(Long carId) {
@@ -45,14 +48,35 @@ public class ReservationService {
         return true;
     }
 
-    private int calculatePriceForReservation(Reservation reservation){
-        int numberOfDays = reservation.getCar().getNumberOfDays();
-        int priceForReservation = reservation.getPriceForReservation();
-        if(numberOfDays > 5){
-            priceForReservation = priceForReservation -
+    private double calculatePriceForReservation(Reservation reservation) {
+        int numberOfDays = reservation.getDateTo().compareTo(reservation.getDateFrom());
+        System.out.println(numberOfDays);
+        double priceForDay = reservation.getCar().getPriceForDay();
+        priceForDay = discountCondition(numberOfDays, priceForDay);
+        double priceForAllReservation = 0;
+
+        for (int i = 0; i <= numberOfDays; i++) {
+            priceForAllReservation += priceForDay;
         }
 
-        return 0;
+        return priceForAllReservation;
+    }
+
+    private static double discountCondition(int numberOfDays, double priceForReservation) {
+        if (numberOfDays > 5 && numberOfDays < 10) {
+            priceForReservation = priceForReservation - (priceForReservation * 0.10);
+            return priceForReservation;
+        } else if (numberOfDays > 10 && numberOfDays < 20) {
+            priceForReservation = priceForReservation - (priceForReservation * 0.20);
+            return priceForReservation;
+        } else if (numberOfDays > 20 && numberOfDays < 30) {
+            priceForReservation = priceForReservation - (priceForReservation * 0.30);
+            return priceForReservation;
+        } else {
+            priceForReservation = priceForReservation - (priceForReservation * 0.40);
+            return priceForReservation;
+        }
+
     }
 
     private void changeCarAvailability(List<Reservation> allReservations) {
@@ -74,8 +98,6 @@ public class ReservationService {
             throw new WrongDateException();
         } else if (reservation.getDateTo().isEqual(reservation.getDateFrom()) || checkIfDateIsAlreadyBooked) {
             throw new WrongDateException();
-        } else {
-            reservationRepository.save(reservation);
         }
     }
 

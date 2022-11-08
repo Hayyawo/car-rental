@@ -33,8 +33,7 @@ public class CarService {
         car.setName(carRequest.getName());
         car.setModel(car.getModel());
         car.setHorsePower(carRequest.getHorsePower());
-        car.setPrice(carRequest.getPrice());
-        car.setNumberOfDays(carRequest.getNumberOfDays());
+        car.setPriceForDay(carRequest.getPrice());
         car.setSecToHundred(carRequest.getSecToHundred());
         carRepository.save(car);
     }
