@@ -1,10 +1,13 @@
 package com.example.carrental.reservation;
 
+import com.example.carrental.accessories.Accessory;
 import com.example.carrental.car.Car;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -22,4 +25,6 @@ public class Reservation {
     private double priceForReservation;
     @ManyToOne
     private Car car;
+    @OneToMany
+    private List<Accessory> accessories = new ArrayList<>();
 }

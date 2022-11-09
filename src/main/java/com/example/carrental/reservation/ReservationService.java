@@ -27,7 +27,9 @@ public class ReservationService {
         double price = calculatePriceForReservation(reservation);
         reservation.setPriceForReservation(price);
         reservationRequest.setPriceForReservation(price);
-        checkDate(reservation);
+        if(checkDate(reservation)){
+            throw new WrongDateException();
+        }
         reservationRepository.save(reservation);
     }
 
@@ -90,28 +92,54 @@ public class ReservationService {
         }
     }
 
-    private void checkDate(Reservation reservation) {
+//    private void checkDate(Reservation reservation) {
+//        List<Reservation> listOfReservations = reservationRepository.findByCar_Id(reservation.getCar().getId());
+//        boolean checkIfDateIsAlreadyBooked = isDateAlreadyBooked(reservation, listOfReservations);
+//
+//        if (reservation.getDateFrom().isBefore(LocalDate.now()) || reservation.getDateTo().isBefore(LocalDate.now())) {
+//            throw new WrongDateException();
+//        } else if (reservation.getDateTo().isEqual(reservation.getDateFrom()) || checkIfDateIsAlreadyBooked) {
+//            throw new WrongDateException();
+//        }
+//    }
+
+    private boolean checkDate(Reservation reservation) {
         List<Reservation> listOfReservations = reservationRepository.findByCar_Id(reservation.getCar().getId());
-        boolean checkIfDateIsAlreadyBooked = isDateIsAlreadyBooked(reservation, listOfReservations);
 
-        if (reservation.getDateFrom().isBefore(LocalDate.now()) || reservation.getDateTo().isBefore(LocalDate.now())) {
-            throw new WrongDateException();
-        } else if (reservation.getDateTo().isEqual(reservation.getDateFrom()) || checkIfDateIsAlreadyBooked) {
-            throw new WrongDateException();
+        if (reservation.getDateFrom().isBefore(reservation.getDateTo()) && !reservation.getDateTo().equals(LocalDate.now()) && !reservation.getDateFrom().isBefore(LocalDate.now())) {
+            for (int i = 0; i < listOfReservations.size(); i++) {
+                for (Reservation listOfReservation : listOfReservations) {
+                    if (reservation.getDateFrom().isEqual(listOfReservations.get(i).getDateTo()) && reservation.getDateTo().isAfter(listOfReservations.get(i).getDateTo())) {
+                        return false;
+                    } else if (reservation.getDateFrom().isEqual(listOfReservations.get(i).getDateTo()) && reservation.getDateTo().isEqual(listOfReservation.getDateFrom())) {
+                        return false;
+                    } else if (reservation.getDateFrom().isAfter(listOfReservations.get(i).getDateFrom()) && reservation.getDateTo().isAfter(listOfReservations.get(i).getDateTo())) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+
+                }
+            }
+        } else {
+            return true;
         }
+        return false;
+//        return listOfReservations.stream()
+//                .anyMatch(reservations ->
+//                           (reservation.getDateFrom().isBefore(reservations.getDateFrom())
+//                        && reservation.getDateTo().isAfter(reservations.getDateFrom()))
+//
+//                        ||
+//                        (reservation.getDateFrom().isBefore(reservations.getDateTo())
+//                                && reservation.getDateTo().isAfter(reservations.getDateTo()))
+//                        ||
+//
+//                        (reservation.getDateFrom().isBefore(reservations.getDateFrom())
+//                                && reservation.getDateTo().isAfter(reservations.getDateTo()))
+//                        ||
+//                                   (reservation.getDateFrom().isAfter(reservations.getDateFrom())
+//                                           && reservation.getDateTo().isBefore(reservations.getDateTo())));
     }
 
-    private static boolean isDateIsAlreadyBooked(Reservation reservation, List<Reservation> listOfReservations) {
-        return listOfReservations.stream()
-                .anyMatch(reservations -> (reservation.getDateFrom().isBefore(reservations.getDateFrom())
-                        && reservation.getDateTo().isAfter(reservations.getDateTo()))
-
-                        ||
-                        (reservation.getDateFrom().isAfter(reservations.getDateFrom())
-                                && reservation.getDateTo().isBefore(reservations.getDateTo()))
-                        ||
-
-                        (reservation.getDateFrom().isEqual(reservations.getDateFrom())
-                                && reservation.getDateTo().isEqual(reservations.getDateTo())));
-    }
 }

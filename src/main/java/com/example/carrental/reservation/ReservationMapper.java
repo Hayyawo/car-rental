@@ -28,6 +28,7 @@ public class ReservationMapper {
         return ReservationResponse.builder()
                 .id(reservation.getId())
                 .dateTo(reservation.getDateTo())
+                .idsOfAccessories(reservation.getAccessories())
                 .priceForReservation(reservation.getPriceForReservation())
                 .dateFrom(reservation.getDateFrom())
                 .carId(reservation.getCar().getId())

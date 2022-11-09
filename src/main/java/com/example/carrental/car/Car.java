@@ -23,7 +23,9 @@ public class Car {
     private int priceForDay;
     private int horsePower;
     private double secToHundred;
-
+    private boolean isofix;
+    private int tankCapacity;
+    private boolean petrol;
     @OneToMany
     private List<Reservation> reservationList = new ArrayList<>();
 }
