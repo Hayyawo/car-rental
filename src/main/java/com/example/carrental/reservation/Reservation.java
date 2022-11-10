@@ -22,7 +22,7 @@ public class Reservation {
     private Long id;
     private LocalDate dateFrom;
     private LocalDate dateTo;
-    private double priceForReservation;
+    private double totalPrice;
     @ManyToOne
     private Car car;
     @OneToMany

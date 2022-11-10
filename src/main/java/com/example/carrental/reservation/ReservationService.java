@@ -1,5 +1,6 @@
 package com.example.carrental.reservation;
 
+import com.example.carrental.accessories.Accessory;
 import com.example.carrental.car.Car;
 import com.example.carrental.car.CarRepository;
 import com.example.carrental.exceptions.CarDoesNotExists;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationService {
@@ -22,15 +24,27 @@ public class ReservationService {
         this.carRepository = carRepository;
     }
 
-    public void save(ReservationRequest reservationRequest) {
+    public ReservationResponse save(ReservationRequest reservationRequest) {
         Reservation reservation = reservationMapper.mapFromDto(reservationRequest);
         double price = calculatePriceForReservation(reservation);
-        reservation.setPriceForReservation(price);
-        reservationRequest.setPriceForReservation(price);
-        if(checkDate(reservation)){
+        reservation.setTotalPrice(price);
+        reservationRepository.save(reservation);
+
+
+        if (checkDate(reservation)) {
             throw new WrongDateException();
         }
-        reservationRepository.save(reservation);
+
+        return ReservationResponse.builder()
+                .id(reservation.getId())
+                .dateFrom(reservation.getDateFrom())
+                .dateTo(reservation.getDateTo())
+                .totalPrice(reservation.getTotalPrice())
+                .carId(reservation.getCar().getId())
+                .accessoryList(reservation.getAccessories().stream()
+                        .map(Accessory::getId).collect(Collectors.toList()))
+                .build();
+
     }
 
     public List<ReservationResponse> reservationList(Long carId) {

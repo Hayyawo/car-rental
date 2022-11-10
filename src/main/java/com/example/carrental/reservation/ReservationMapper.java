@@ -1,9 +1,12 @@
 package com.example.carrental.reservation;
 
+import com.example.carrental.accessories.Accessory;
 import com.example.carrental.car.Car;
 import com.example.carrental.car.CarRepository;
 import com.example.carrental.exceptions.CarDoesNotExists;
 import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 @Component
 public class ReservationMapper {
@@ -19,7 +22,6 @@ public class ReservationMapper {
         return Reservation.builder()
                 .dateFrom(reservationRequest.getDateFrom())
                 .dateTo(reservationRequest.getDateTo())
-                .priceForReservation(reservationRequest.getPriceForReservation())
                 .car(car)
                 .build();
     }
@@ -28,8 +30,10 @@ public class ReservationMapper {
         return ReservationResponse.builder()
                 .id(reservation.getId())
                 .dateTo(reservation.getDateTo())
-                .idsOfAccessories(reservation.getAccessories())
-                .priceForReservation(reservation.getPriceForReservation())
+                .accessoryList(reservation.getAccessories().stream()
+                        .map(Accessory::getId)
+                        .collect(Collectors.toList()))
+                .totalPrice(reservation.getTotalPrice())
                 .dateFrom(reservation.getDateFrom())
                 .carId(reservation.getCar().getId())
                 .build();

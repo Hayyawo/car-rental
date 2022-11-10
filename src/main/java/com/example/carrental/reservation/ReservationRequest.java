@@ -12,6 +12,5 @@ import java.time.LocalDate;
 public class ReservationRequest {
     private LocalDate dateFrom;
     private LocalDate dateTo;
-    private double priceForReservation;
     private Long carId;
 }

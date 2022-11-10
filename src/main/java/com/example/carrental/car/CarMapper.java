@@ -1,7 +1,10 @@
 package com.example.carrental.car;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class CarMapper {
-    public static Car mapFromDto(CarRequest carRequest) {
+    public  Car mapFromDto(CarRequest carRequest) {
         return Car.builder()
                 .name(carRequest.getName())
                 .model(carRequest.getModel())

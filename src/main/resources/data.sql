@@ -9,7 +9,7 @@ values ('2022-11-06', '2022-11-20', 100, 1),
        ('2022-11-05', '2022-11-06', 2453, 3);
 
 insert into accessory(name, description, price, paid_daily, reservation_id)
-values ('Full tank of fuel', 'Dont worry about refueling. Car has full tank of fuel - you can return car with an empty tank', 6.5, false, 1),
+values ('Full tank of fuel', 'Dont worry about refueling. Car has full tank of fuel - you can return car with an empty tank', 0, false, 1),
        ('Without deposit', 'By this accessory you dont have to pay for ', 250, true, 1);
 
 

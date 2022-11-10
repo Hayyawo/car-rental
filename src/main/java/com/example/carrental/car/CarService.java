@@ -9,14 +9,16 @@ import java.util.stream.Collectors;
 @Service
 public class CarService {
     private final CarRepository carRepository;
+    private final CarMapper carMapper;
 
-    public CarService(CarRepository carRepository) {
+    public CarService(CarRepository carRepository, CarMapper carMapper) {
         this.carRepository = carRepository;
+        this.carMapper = carMapper;
     }
 
 
     public void save(CarRequest carRequest) {
-        Car car = CarMapper.mapFromDto(carRequest);
+        Car car = carMapper.mapFromDto(carRequest);
         car.setCarFreeNow(true);
         carRepository.save(car);
     }

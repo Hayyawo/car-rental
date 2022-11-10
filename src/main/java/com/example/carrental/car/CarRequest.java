@@ -1,10 +1,11 @@
 package com.example.carrental.car;
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 @Builder
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CarRequest {
     private Long id;
     private String name;
