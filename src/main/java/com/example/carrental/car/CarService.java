@@ -53,4 +53,12 @@ public class CarService {
                 .map(CarMapper::mapToDto)
                 .collect(Collectors.toList());
     }
+
+    public CarResponse findSingleCar(long carId) {
+        return carRepository.findById(carId)
+                .stream()
+                .map(CarMapper::mapToDto)
+                .findAny()
+                .orElseThrow(CarDoesNotExists::new);
+    }
 }

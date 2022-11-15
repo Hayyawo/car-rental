@@ -20,6 +20,10 @@ public class CarController {
         carService.save(carRequest);
         return new ResponseEntity<>(carRequest, HttpStatus.OK);
     }
+    @GetMapping("/api/car/{carId}")
+    public ResponseEntity<CarResponse> getSpecificCar(@PathVariable long carId){
+        return new ResponseEntity<>(carService.findSingleCar(carId), HttpStatus.OK);
+    }
 
     @GetMapping("/api/cars")
     public List<CarResponse> allCars() {

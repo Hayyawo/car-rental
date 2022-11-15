@@ -15,9 +15,8 @@ public class ReservationController {
         this.reservationService = reservationService;
     }
     @PostMapping("/api/reservation")
-    public ResponseEntity<ReservationRequest> addReservation(@RequestBody ReservationRequest reservationRequest){
-        reservationService.save(reservationRequest);
-        return new ResponseEntity<>(reservationRequest, HttpStatus.OK);
+    public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest reservationRequest){
+        return new ResponseEntity<>(reservationService.save(reservationRequest), HttpStatus.OK);
     }
 
     @GetMapping("/api/reservations/{carId}")
