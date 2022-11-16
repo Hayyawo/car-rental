@@ -13,13 +13,7 @@ values ('Full tank of fuel',
         'Dont worry about refueling. Car has full tank of fuel - you can return car with an empty tank', 0, false, 1),
        ('Without deposit', 'By this accessory you dont have to pay for ', 250, true, 1);
 
-insert into price(car_id, price_for_day)
-values (1, 400),
-       (2, 5000),
-       (3, 2800);
-
--- //2800 przy jednym dniu 2800
--- 5000 za dwa dni         2500
--- 7500 za 3               2500
--- 11750                   2350
---                          933,33
+insert into price_for_rent(car_id, price_for_day)
+values (1, 400.0),
+       (2, 5000.0),
+       (3, 2800.0);

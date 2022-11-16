@@ -28,4 +28,9 @@ public class ReservationController {
     public boolean deleteOldReservations(){
         return reservationService.deleteReservationIfTimePassed();
     }
+
+    @PutMapping("/api/reservations")
+    public ResponseEntity<ReservationResponse> editReservation(ReservationRequest reservationRequest){
+       return new ResponseEntity<>(reservationService.editReservation(reservationRequest),HttpStatus.OK);
+    }
 }

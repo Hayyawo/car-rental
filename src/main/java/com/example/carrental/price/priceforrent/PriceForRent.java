@@ -1,6 +1,7 @@
-package com.example.carrental.price;
+package com.example.carrental.price.priceforrent;
 
-import lombok.Getter;
+import jdk.jfr.Name;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,7 +10,11 @@ import javax.persistence.Id;
 
 @Entity
 @Getter
-public class Price {
+@Builder
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class PriceForRent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

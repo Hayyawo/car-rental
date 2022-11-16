@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Setter
 @Builder
 public class ReservationRequest {
+    private Long id;
     private LocalDate dateFrom;
     private LocalDate dateTo;
     private Long carId;

@@ -3,31 +3,33 @@ package com.example.carrental.reservation;
 import com.example.carrental.car.Car;
 import com.example.carrental.car.CarRepository;
 import com.example.carrental.exceptions.CarDoesNotExists;
+import com.example.carrental.exceptions.ReservationDoesNotExists;
 import com.example.carrental.exceptions.WrongDateException;
-import com.example.carrental.price.PriceService;
+import com.example.carrental.price.priceforrent.PriceForRentService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationMapper reservationMapper;
     private final CarRepository carRepository;
-    private final PriceService priceService;
+    private final PriceForRentService priceForRentService;
 
-    public ReservationService(ReservationRepository reservationRepository, ReservationMapper reservationMapper, CarRepository carRepository, PriceService priceService) {
+    public ReservationService(ReservationRepository reservationRepository, ReservationMapper reservationMapper, CarRepository carRepository, PriceForRentService priceForRentService) {
         this.reservationRepository = reservationRepository;
         this.reservationMapper = reservationMapper;
         this.carRepository = carRepository;
-        this.priceService = priceService;
+        this.priceForRentService = priceForRentService;
     }
 
     public ReservationResponse save(ReservationRequest reservationRequest) {
         Reservation reservation = reservationMapper.mapFromDto(reservationRequest);
-        double price = priceService.calculatePriceForReservation(reservation.getCar().getId(), reservation.getDateTo().compareTo(reservation.getDateFrom()));
+        double price = priceForRentService.calculatePriceForReservation(reservation.getCar().getId(), reservation.getDateTo().compareTo(reservation.getDateFrom()));
         reservation.setTotalPrice(price);
         reservationRepository.save(reservation);
 
@@ -65,5 +67,19 @@ public class ReservationService {
                 .filter(reservation -> reservation.getDateTo().isBefore(LocalDate.now()))
                 .forEach(reservationRepository::delete);
         return true;
+    }
+
+    public ReservationResponse editReservation(ReservationRequest reservationRequest) {
+        Reservation reservation = reservationRepository.findById(reservationRequest.getId())
+                .orElseThrow(ReservationDoesNotExists::new);
+        Car car = carRepository.findById(reservationRequest.getCarId())
+                .orElseThrow(CarDoesNotExists::new);
+
+        reservation.setDateTo(reservationRequest.getDateTo());
+        reservation.setDateFrom(reservationRequest.getDateTo());
+        reservation.setCar(car);
+
+        reservationRepository.save(reservation);
+        return reservationMapper.mapToDto(reservation);
     }
 }
