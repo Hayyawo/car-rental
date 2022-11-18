@@ -16,7 +16,7 @@ public class PriceForRentController {
 
     @PostMapping("/api/price-for-rent")
     public ResponseEntity<PriceForRentResponse> addPrice(@RequestBody PriceForRentRequest priceForRentRequest) {
-        return new ResponseEntity<>(priceForRentService.save(priceForRentRequest),HttpStatus.OK);
+        return new ResponseEntity<>(priceForRentService.save(priceForRentRequest), HttpStatus.OK);
 
     }
 

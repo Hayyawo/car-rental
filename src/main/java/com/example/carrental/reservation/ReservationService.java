@@ -31,11 +31,11 @@ public class ReservationService {
         Reservation reservation = reservationMapper.mapFromDto(reservationRequest);
         double price = priceForRentService.calculatePriceForReservation(reservation.getCar().getId(), reservation.getDateTo().compareTo(reservation.getDateFrom()));
         reservation.setTotalPrice(price);
-        reservationRepository.save(reservation);
 
         if (checkDate(reservation)) {
             throw new WrongDateException();
         }
+        reservationRepository.save(reservation);
         return reservationMapper.mapToDto(reservation);
     }
 
@@ -43,21 +43,6 @@ public class ReservationService {
         return reservationRepository.findByCar_Id(carId)
                 .stream()
                 .map(reservationMapper::mapToDto).toList();
-    }
-
-    public boolean checkDate(Reservation reservation) {
-        List<Reservation> allReservations = reservationRepository.findAll();
-        for (Reservation r : allReservations) {
-            if (    reservation.getDateFrom().isBefore(LocalDate.now()) ||
-                    reservation.getDateFrom().isEqual(reservation.getDateTo()) ||
-                    reservation.getDateFrom().isEqual(r.getDateFrom()) ||
-                    reservation.getDateTo().isEqual(r.getDateTo()) ||
-                    reservation.getDateFrom().isBefore(r.getDateTo()) ||
-                    reservation.getDateTo().isAfter(r.getDateFrom())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @PostConstruct
@@ -81,5 +66,20 @@ public class ReservationService {
 
         reservationRepository.save(reservation);
         return reservationMapper.mapToDto(reservation);
+    }
+
+    private boolean checkDate(Reservation reservation) {
+        List<Reservation> allReservations = reservationRepository.findAll();
+        for (Reservation r : allReservations) {
+            if (    reservation.getDateFrom().isBefore(LocalDate.now()) ||
+                    reservation.getDateFrom().isEqual(reservation.getDateTo()) ||
+                    reservation.getDateFrom().isEqual(r.getDateFrom()) ||
+                    reservation.getDateTo().isEqual(r.getDateTo()) ||
+                    reservation.getDateFrom().isBefore(r.getDateTo()) ||
+                    reservation.getDateTo().isAfter(r.getDateFrom())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -17,7 +17,7 @@ public class PriceForRentService {
     public double calculatePriceForReservation(Long carId, int numberOfDays) {
         PriceForRent priceForRent = priceForRentRepository.findByCarId(carId)
                 .orElseThrow();
-        return priceForRent.getPriceForDay() * numberOfDays;
+        return calculatePriceDependingOnTheNumberOfDays(priceForRent.getPriceForDay(), numberOfDays);
     }
 
     public PriceForRentResponse save(PriceForRentRequest priceForRentRequest) {
@@ -47,5 +47,17 @@ public class PriceForRentService {
         PriceForRent price = priceForRentRepository.findById(priceId)
                 .orElseThrow(PriceDoesNotExists::new);
         priceForRentRepository.delete(price);
+    }
+
+    private double calculatePriceDependingOnTheNumberOfDays(double priceForDay, int numberOfDays) {
+        double totalPrice = 0;
+        if(numberOfDays >= 2 && numberOfDays <= 3){
+            totalPrice += priceForDay;
+        } else if (numberOfDays >= 7 && numberOfDays <= 14) {
+            totalPrice += priceForDay * 0.9;
+        }else {
+            totalPrice += priceForDay * 0.8;
+        }
+        return totalPrice;
     }
 }

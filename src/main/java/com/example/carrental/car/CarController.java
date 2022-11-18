@@ -16,9 +16,8 @@ public class CarController {
     }
 
     @PostMapping("/api/car")
-    public ResponseEntity<CarRequest> addCar(@RequestBody CarRequest carRequest) {
-        carService.save(carRequest);
-        return new ResponseEntity<>(carRequest, HttpStatus.OK);
+    public ResponseEntity<CarResponse> addCar(@RequestBody CarRequest carRequest) {
+        return new ResponseEntity<>( carService.save(carRequest), HttpStatus.OK);
     }
     @GetMapping("/api/car/{carId}")
     public ResponseEntity<CarResponse> getSpecificCar(@PathVariable long carId){

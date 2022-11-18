@@ -1,8 +1,11 @@
 package com.example.carrental.car;
 
 import com.example.carrental.exceptions.CarDoesNotExists;
+import com.example.carrental.reservation.Reservation;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,15 +20,15 @@ public class CarService {
     }
 
 
-    public void save(CarRequest carRequest) {
+    public CarResponse save(CarRequest carRequest) {
         Car car = carMapper.mapFromDto(carRequest);
-        car.setCarFreeNow(true);
         carRepository.save(car);
+        return carMapper.mapToDto(car);
     }
 
     public List<CarResponse> findAll() {
         return carRepository.findAll().stream()
-                .map(CarMapper::mapToDto)
+                .map(carMapper::mapToDto)
                 .collect(Collectors.toList());
     }
 
@@ -35,7 +38,6 @@ public class CarService {
         car.setName(carRequest.getName());
         car.setModel(car.getModel());
         car.setHorsePower(carRequest.getHorsePower());
-        car.setPriceForDay(carRequest.getPrice());
         car.setSecToHundred(carRequest.getSecToHundred());
         carRepository.save(car);
     }
@@ -46,19 +48,31 @@ public class CarService {
         carRepository.delete(car);
     }
 
+
     public List<CarResponse> findAllAvailableCars() {
-        return carRepository.findAll()
-                .stream()
-                .filter(Car::isCarFreeNow)
-                .map(CarMapper::mapToDto)
+        List<Car> cars = carRepository.findAll();
+
+        return getAvailableCars(cars).stream()
+                .map(carMapper::mapToDto)
                 .collect(Collectors.toList());
     }
+
 
     public CarResponse findSingleCar(long carId) {
         return carRepository.findById(carId)
                 .stream()
-                .map(CarMapper::mapToDto)
+                .map(carMapper::mapToDto)
                 .findAny()
                 .orElseThrow(CarDoesNotExists::new);
+    }
+
+    private static List<Car> getAvailableCars(List<Car> cars) {
+        List<Car> avaiableCars = new ArrayList<>();
+        for (Car car : cars) {
+            if (car.getReservationList().isEmpty()) {
+                avaiableCars.add(car);
+            }
+        }
+        return avaiableCars;
     }
 }

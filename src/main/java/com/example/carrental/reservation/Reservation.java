@@ -24,6 +24,7 @@ public class Reservation {
     private LocalDate dateTo;
     private double totalPrice;
     @ManyToOne
+    @JoinColumn(name = "car_id")
     private Car car;
     @OneToMany
     private List<Accessory> accessories = new ArrayList<>();

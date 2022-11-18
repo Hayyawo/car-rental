@@ -20,4 +20,5 @@ public class PriceForRent {
     private Long id;
     private Long carId;
     private double priceForDay;
+
 }

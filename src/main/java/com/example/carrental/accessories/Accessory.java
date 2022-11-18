@@ -1,5 +1,6 @@
 package com.example.carrental.accessories;
 
+import com.example.carrental.price.priceforaccessory.PriceForAccessory;
 import com.example.carrental.reservation.Reservation;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,10 +17,8 @@ public class Accessory {
     private Long id;
     private String name;
     private String description;
-    private double price;
-    private boolean paidDaily;
     @OneToOne
-    private Deposit deposit;
+    private PriceForAccessory priceForAccessory;
     @ManyToOne
     private Reservation reservation;
 }

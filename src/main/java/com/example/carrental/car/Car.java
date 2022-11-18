@@ -19,13 +19,12 @@ public class Car {
     private Long id;
     private String name;
     private String model;
-    private boolean isCarFreeNow;
     private int priceForDay;
     private int horsePower;
     private double secToHundred;
     private boolean isofix;
     private int tankCapacity;
     private boolean petrol;
-    @OneToMany
+    @OneToMany(mappedBy = "car")
     private List<Reservation> reservationList = new ArrayList<>();
 }
