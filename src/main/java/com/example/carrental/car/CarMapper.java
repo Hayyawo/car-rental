@@ -4,7 +4,6 @@ import com.example.carrental.reservation.Reservation;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class CarMapper {
@@ -18,10 +17,10 @@ public class CarMapper {
     }
 
     public CarResponse mapToDto(Car car) {
-        List<Long> collect = car.getReservationList().stream().map(Reservation::getId).toList();
+        List<Long> reservationIds = car.getReservationList().stream().map(Reservation::getId).toList();
         return CarResponse.builder()
                 .id(car.getId())
-                .idReservationList(collect)
+                .reservationIds(reservationIds)
                 .horsePower(car.getHorsePower())
                 .model(car.getModel())
                 .secToHundred(car.getSecToHundred())

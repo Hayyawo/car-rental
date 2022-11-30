@@ -1,7 +1,7 @@
-insert into car(name, model, price_for_day, horse_power, sec_to_hundred, isofix, tank_capacity, petrol)
-values ('Golf', '7R', 600, 315, 4.8, true, 70, true),
-       ('Lamborghini', 'Huracan Evo', 1665, 640, 2.9, false, 60, true),
-       ('Audi', 'RSQ8', 930, 600, 3.8, true, 100, true);
+insert into car(name, model, price_for_day, horse_power, sec_to_hundred, isofix, tank_capacity, type_of_fuel)
+values ('Golf', '7R', 600, 315, 4.8, true, 70, 'GAS'),
+       ('Lamborghini', 'Huracan Evo', 1665, 640, 2.9, false, 60, 'GAS'),
+       ('Audi', 'RSQ8', 930, 600, 3.8, true, 100, 'GAS');
 
 insert into reservation(date_from, date_to, total_price, car_id)
 values ('2022-11-06', '2022-11-20', 100, 1),

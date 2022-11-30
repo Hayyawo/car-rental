@@ -2,17 +2,14 @@ package com.example.carrental.price.priceforrent;
 
 import com.example.carrental.exceptions.PriceDoesNotExists;
 import com.example.carrental.exceptions.PriceNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class PriceForRentService {
     private final PriceForRentRepository priceForRentRepository;
     private final PriceForRentMapper priceForRentMapper;
-
-    public PriceForRentService(PriceForRentRepository priceForRentRepository, PriceForRentMapper priceForRentMapper) {
-        this.priceForRentRepository = priceForRentRepository;
-        this.priceForRentMapper = priceForRentMapper;
-    }
 
     public double calculatePriceForReservation(Long carId, int numberOfDays) {
         PriceForRent priceForRent = priceForRentRepository.findByCarId(carId)

@@ -1,18 +1,15 @@
 package com.example.carrental.price.priceforrent;
 
-import com.example.carrental.reservation.Reservation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequiredArgsConstructor
 public class PriceForRentController {
     private final PriceForRentService priceForRentService;
-
-    public PriceForRentController(PriceForRentService priceForRentService) {
-        this.priceForRentService = priceForRentService;
-    }
 
     @PostMapping("/api/price-for-rent")
     public ResponseEntity<PriceForRentResponse> addPrice(@RequestBody PriceForRentRequest priceForRentRequest) {

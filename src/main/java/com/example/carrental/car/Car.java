@@ -24,7 +24,8 @@ public class Car {
     private double secToHundred;
     private boolean isofix;
     private int tankCapacity;
-    private boolean petrol;
+    @Enumerated(EnumType.STRING)
+    private TypeOfFuel typeOfFuel;
     @OneToMany(mappedBy = "car")
     private List<Reservation> reservationList = new ArrayList<>();
 }

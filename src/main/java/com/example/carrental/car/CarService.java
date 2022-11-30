@@ -1,24 +1,20 @@
 package com.example.carrental.car;
 
 import com.example.carrental.exceptions.CarDoesNotExists;
-import com.example.carrental.reservation.Reservation;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CarService {
     private final CarRepository carRepository;
     private final CarMapper carMapper;
-
-    public CarService(CarRepository carRepository, CarMapper carMapper) {
-        this.carRepository = carRepository;
-        this.carMapper = carMapper;
-    }
-
 
     public CarResponse save(CarRequest carRequest) {
         Car car = carMapper.mapFromDto(carRequest);
@@ -26,11 +22,6 @@ public class CarService {
         return carMapper.mapToDto(car);
     }
 
-    public List<CarResponse> findAll() {
-        return carRepository.findAll().stream()
-                .map(carMapper::mapToDto)
-                .collect(Collectors.toList());
-    }
 
     public void editCar(CarRequest carRequest) {
         Car car = carRepository.findById(carRequest.getId())
@@ -60,19 +51,17 @@ public class CarService {
 
     public CarResponse findSingleCar(long carId) {
         return carRepository.findById(carId)
-                .stream()
                 .map(carMapper::mapToDto)
-                .findAny()
                 .orElseThrow(CarDoesNotExists::new);
     }
 
     private static List<Car> getAvailableCars(List<Car> cars) {
-        List<Car> avaiableCars = new ArrayList<>();
-        for (Car car : cars) {
-            if (car.getReservationList().isEmpty()) {
-                avaiableCars.add(car);
-            }
-        }
-        return avaiableCars;
+        return cars.stream()
+                .filter(car -> CollectionUtils.isEmpty(car.getReservationList()))
+                .toList();
+    }
+    public Page<CarResponse> findByFilter(CarFilter carFilter, Pageable pageable) {
+        return carRepository.findByFiler(carFilter, pageable)
+                .map(carMapper::mapToDto);
     }
 }

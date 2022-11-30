@@ -15,5 +15,5 @@ public class CarResponse {
     private String model;
     private int horsePower;
     private double secToHundred;
-    private List<Long> idReservationList;
+    private List<Long> reservationIds;
 }
