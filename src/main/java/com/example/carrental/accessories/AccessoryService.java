@@ -22,9 +22,7 @@ public class AccessoryService {
         Reservation reservation = findReservation(accessoryRequest);
         addAccessoryToReservation(accessory, reservation);
         addPriceForReservation(accessory, reservation);
-        System.out.println(
-                reservation
-        );
+
         reservationRepository.save(reservation);
     }
 
@@ -37,6 +35,7 @@ public class AccessoryService {
         List<Accessory> accessories = reservation.getAccessories();
         accessories.add(accessory);
         reservation.setAccessories(accessories);
+        accessory.setReservation(reservation);
     }
 
     private Accessory findAccessory(AccessoryRequest accessoryRequest) {

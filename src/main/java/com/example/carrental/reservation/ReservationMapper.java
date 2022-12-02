@@ -40,7 +40,7 @@ public class ReservationMapper {
                 .dateFrom(reservation.getDateFrom())
                 .carId(reservation.getCar().getId())
                 //todo cos wywala blad jak chce wrzucic ta liste ale typu Accessory
-                .accessoriesIds(accessoriesIds)
+                .accessoryIds(accessoriesIds)
                 .build();
 
     }

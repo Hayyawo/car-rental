@@ -16,5 +16,5 @@ public class ReservationResponse {
     private LocalDate dateTo;
     private double totalPrice;
     private Long carId;
-    private List<Long> accessoriesIds;
+    private List<Long> accessoryIds;
 }
