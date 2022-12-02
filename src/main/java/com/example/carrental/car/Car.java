@@ -26,6 +26,6 @@ public class Car {
     private int tankCapacity;
     @Enumerated(EnumType.STRING)
     private TypeOfFuel typeOfFuel;
-    @OneToMany(mappedBy = "car")
+    @OneToMany(mappedBy = "car", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private List<Reservation> reservationList = new ArrayList<>();
 }

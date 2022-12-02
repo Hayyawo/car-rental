@@ -8,6 +8,8 @@ import com.example.carrental.reservation.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AccessoryService {
@@ -18,12 +20,23 @@ public class AccessoryService {
     public void addAccessoryToReservation(AccessoryRequest accessoryRequest) {
         Accessory accessory = findAccessory(accessoryRequest);
         Reservation reservation = findReservation(accessoryRequest);
+        addAccessoryToReservation(accessory, reservation);
+        addPriceForReservation(accessory, reservation);
+        System.out.println(
+                reservation
+        );
+        reservationRepository.save(reservation);
+    }
 
-        reservation.getAccessories().add(accessory);
-
+    private void addPriceForReservation(Accessory accessory, Reservation reservation) {
         double priceForAccessories = priceForAccessoryService.countPriceForAccessory(reservation, accessory.getPriceForAccessory());
         reservation.setTotalPrice(reservation.getTotalPrice() + priceForAccessories);
-        reservationRepository.save(reservation);
+    }
+
+    private static void addAccessoryToReservation(Accessory accessory, Reservation reservation) {
+        List<Accessory> accessories = reservation.getAccessories();
+        accessories.add(accessory);
+        reservation.setAccessories(accessories);
     }
 
     private Accessory findAccessory(AccessoryRequest accessoryRequest) {

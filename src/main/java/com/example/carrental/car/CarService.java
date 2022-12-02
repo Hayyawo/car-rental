@@ -1,6 +1,8 @@
 package com.example.carrental.car;
 
 import com.example.carrental.exceptions.CarDoesNotExists;
+import com.example.carrental.reservation.Reservation;
+import com.example.carrental.reservation.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CarService {
     private final CarRepository carRepository;
+    private final ReservationRepository reservationRepository;
     private final CarMapper carMapper;
 
     public CarResponse save(CarRequest carRequest) {
@@ -36,6 +39,7 @@ public class CarService {
     public void delete(Long id) {
         Car car = carRepository.findById(id)
                 .orElseThrow(CarDoesNotExists::new);
+
         carRepository.delete(car);
     }
 

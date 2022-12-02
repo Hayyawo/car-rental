@@ -5,15 +5,18 @@ values ('Golf', '7R', 600, 315, 4.8, true, 70, 'GAS'),
 
 insert into reservation(date_from, date_to, total_price, car_id)
 values ('2022-11-06', '2022-11-20', 100, 1),
-       ('2022-11-06', '2022-11-20', 2000, 2),
+--        ('2022-11-06', '2022-11-20', 2000, 2),
        ('2022-11-05', '2022-11-06', 2453, 3);
 
 insert into accessory(name, description, reservation_id)
 values ('Full tank of fuel',
-        'Dont worry about refueling. Car has full tank of fuel - you can return car with an empty tank',  1),
-       ('Without deposit', 'By this accessory you dont have to pay for ',  1);
+        'Dont worry about refueling. Car has full tank of fuel - you can return car with an empty tank', 1),
+       ('Without deposit', 'By this accessory you dont have to pay for ', 1);
 
 insert into price_for_rent(car_id, price_for_day)
 values (1, 400.0),
        (2, 5000.0),
        (3, 2800.0);
+insert into price_for_accessory(paid_daily, price, accessory_id)
+values (false, 100.0, 1),
+       (true, 500.0, 2);

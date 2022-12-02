@@ -19,14 +19,18 @@ public class ReservationController {
         return new ResponseEntity<>(reservationService.save(reservationRequest), HttpStatus.OK);
     }
 
-    @GetMapping("/api/reservations/{carId}")
-    public List<ReservationResponse> reservationList(@PathVariable long carId){
+    @GetMapping("/api/reservations")
+    public List<ReservationResponse> reservationList(Long carId){
         return reservationService.reservationList(carId);
     }
 
     @DeleteMapping("/api/reservation")
-    public boolean deleteOldReservations(){
-        return reservationService.deleteReservationIfTimePassed();
+    public void deleteOldReservations(){
+        reservationService.deleteReservationIfTimePassed();
+    }
+    @DeleteMapping("/api/reservation/{reservationId}")
+    public void deleteReservation(@PathVariable long reservationId){
+        reservationService.delete(reservationId);
     }
 
     @PutMapping("/api/reservations")

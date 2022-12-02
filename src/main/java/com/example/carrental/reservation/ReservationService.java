@@ -6,6 +6,7 @@ import com.example.carrental.exceptions.CarDoesNotExists;
 import com.example.carrental.exceptions.ReservationDoesNotExists;
 import com.example.carrental.exceptions.WrongDateException;
 import com.example.carrental.price.priceforrent.PriceForRentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -14,18 +15,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationMapper reservationMapper;
     private final CarRepository carRepository;
     private final PriceForRentService priceForRentService;
-
-    public ReservationService(ReservationRepository reservationRepository, ReservationMapper reservationMapper, CarRepository carRepository, PriceForRentService priceForRentService) {
-        this.reservationRepository = reservationRepository;
-        this.reservationMapper = reservationMapper;
-        this.carRepository = carRepository;
-        this.priceForRentService = priceForRentService;
-    }
 
     public ReservationResponse save(ReservationRequest reservationRequest) {
         Reservation reservation = reservationMapper.mapFromDto(reservationRequest);
@@ -40,18 +35,23 @@ public class ReservationService {
     }
 
     public List<ReservationResponse> reservationList(Long carId) {
-        return reservationRepository.findByCar_Id(carId)
-                .stream()
-                .map(reservationMapper::mapToDto).toList();
+        if (carId == null) {
+            return reservationRepository.findAll()
+                    .stream()
+                    .map(reservationMapper::mapToDto).toList();
+        } else {
+            return reservationRepository.findByCar_Id(carId)
+                    .stream()
+                    .map(reservationMapper::mapToDto).toList();
+        }
     }
 
     @PostConstruct
-    public boolean deleteReservationIfTimePassed() {
+    public void deleteReservationIfTimePassed() {
         List<Reservation> allReservations = reservationRepository.findAll();
         allReservations.stream()
                 .filter(reservation -> reservation.getDateTo().isBefore(LocalDate.now()))
                 .forEach(reservationRepository::delete);
-        return true;
     }
 
     public ReservationResponse editReservation(ReservationRequest reservationRequest) {
@@ -68,17 +68,23 @@ public class ReservationService {
         return reservationMapper.mapToDto(reservation);
     }
 
+    public void delete(Long reservationId) {
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(ReservationDoesNotExists::new);
+        reservationRepository.delete(reservation);
+    }
+//todo nie dziala to poprawnie daty sie moga zazebiac i nie wywala bledu
     private boolean checkDate(Reservation reservation) {
         List<Reservation> allReservations = reservationRepository.findAll();
         for (Reservation r : allReservations) {
-            if (    reservation.getDateFrom().isBefore(LocalDate.now()) ||
-                    reservation.getDateFrom().isEqual(reservation.getDateTo()) ||
+            return reservation.getDateFrom().isBefore(LocalDate.now()) ||
+                    reservation.getDateFrom().isEqual(r.getDateTo()) ||
                     reservation.getDateFrom().isEqual(r.getDateFrom()) ||
                     reservation.getDateTo().isEqual(r.getDateTo()) ||
+                    reservation.getDateTo().isEqual(r.getDateFrom()) ||
                     reservation.getDateFrom().isBefore(r.getDateTo()) ||
-                    reservation.getDateTo().isAfter(r.getDateFrom())) {
-                return true;
-            }
+                    reservation.getDateTo().isBefore(r.getDateFrom()) ||
+                    (reservation.getDateFrom().isEqual(r.getDateFrom()) && reservation.getDateTo().isEqual(r.getDateTo()));
         }
         return false;
     }

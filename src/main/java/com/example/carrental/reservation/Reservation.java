@@ -15,7 +15,6 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-@ToString
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,9 +22,10 @@ public class Reservation {
     private LocalDate dateFrom;
     private LocalDate dateTo;
     private double totalPrice;
-    @ManyToOne
+    //todo jaka tu kaskade dac zeby bledem nie sypalo?
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "car_id")
     private Car car;
-    @OneToMany
+    @OneToMany(mappedBy = "reservation")
     private List<Accessory> accessories = new ArrayList<>();
 }

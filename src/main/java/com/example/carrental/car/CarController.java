@@ -26,6 +26,7 @@ public class CarController {
     public List<CarResponse> allAvailableCars(){
         return carService.findAllAvailableCars();
     }
+
     @GetMapping("/api/cars")
     public Page<CarResponse> allCars(CarFilter carFilter, Pageable pageable) {
         return carService.findByFilter(carFilter, pageable);

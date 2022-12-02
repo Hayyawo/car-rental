@@ -2,9 +2,7 @@ package com.example.carrental.accessories;
 
 import com.example.carrental.price.priceforaccessory.PriceForAccessory;
 import com.example.carrental.reservation.Reservation;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -17,8 +15,9 @@ public class Accessory {
     private Long id;
     private String name;
     private String description;
-    @OneToOne
+    @OneToOne(mappedBy = "accessory")
     private PriceForAccessory priceForAccessory;
     @ManyToOne
+    @JoinColumn(name = "reservation_id")
     private Reservation reservation;
 }

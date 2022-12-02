@@ -1,5 +1,6 @@
 package com.example.carrental.reservation;
 
+import com.example.carrental.accessories.Accessory;
 import lombok.*;
 
 import java.time.LocalDate;

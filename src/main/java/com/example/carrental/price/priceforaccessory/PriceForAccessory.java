@@ -14,5 +14,6 @@ public class PriceForAccessory {
     private boolean paidDaily;
     private double price;
     @OneToOne
+    @JoinColumn(name = "accessory_id")
     private Accessory accessory;
 }
