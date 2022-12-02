@@ -1,6 +1,5 @@
 package com.example.carrental.reservation;
 
-import com.example.carrental.accessories.Accessory;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -17,5 +16,5 @@ public class ReservationResponse {
     private LocalDate dateTo;
     private double totalPrice;
     private Long carId;
-    private List<Long> accessoryList;
+    private List<Long> accessoriesIds;
 }

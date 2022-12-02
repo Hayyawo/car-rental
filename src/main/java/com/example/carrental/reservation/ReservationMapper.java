@@ -8,8 +8,8 @@ import com.example.carrental.exceptions.CarDoesNotExists;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -29,7 +29,10 @@ public class ReservationMapper {
     }
 
     public ReservationResponse mapToDto(Reservation reservation) {
-        List<Long> accessoriesIds = reservation.getAccessories().stream().map(Accessory::getId).toList();
+        List<Long> accessoriesIds = new ArrayList<>();
+        if (reservation.getAccessories() != null) {
+            accessoriesIds = reservation.getAccessories().stream().map(Accessory::getId).toList();
+        }
         return ReservationResponse.builder()
                 .id(reservation.getId())
                 .dateTo(reservation.getDateTo())
@@ -37,7 +40,7 @@ public class ReservationMapper {
                 .dateFrom(reservation.getDateFrom())
                 .carId(reservation.getCar().getId())
                 //todo cos wywala blad jak chce wrzucic ta liste ale typu Accessory
-                .accessoryList(accessoriesIds)
+                .accessoriesIds(accessoriesIds)
                 .build();
 
     }

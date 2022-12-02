@@ -1,7 +1,10 @@
 package com.example.carrental.reservation;
 
+import com.example.carrental.accessories.Accessory;
+import com.example.carrental.accessories.AccessoryRepository;
 import com.example.carrental.car.Car;
 import com.example.carrental.car.CarRepository;
+import com.example.carrental.exceptions.AccessoryDoesNotExists;
 import com.example.carrental.exceptions.CarDoesNotExists;
 import com.example.carrental.exceptions.ReservationDoesNotExists;
 import com.example.carrental.exceptions.WrongDateException;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +25,7 @@ public class ReservationService {
     private final ReservationMapper reservationMapper;
     private final CarRepository carRepository;
     private final PriceForRentService priceForRentService;
+    private final AccessoryRepository accessoryRepository;
 
     public ReservationResponse save(ReservationRequest reservationRequest) {
         Reservation reservation = reservationMapper.mapFromDto(reservationRequest);
@@ -30,6 +35,8 @@ public class ReservationService {
         if (checkDate(reservation)) {
             throw new WrongDateException();
         }
+        addAccessoriesToReservation(reservationRequest, reservation);
+
         reservationRepository.save(reservation);
         return reservationMapper.mapToDto(reservation);
     }
@@ -73,7 +80,9 @@ public class ReservationService {
                 .orElseThrow(ReservationDoesNotExists::new);
         reservationRepository.delete(reservation);
     }
-//todo nie dziala to poprawnie daty sie moga zazebiac i nie wywala bledu
+
+    //todo nie dziala to poprawnie daty sie moga zazebiac i nie wywala bledu
+
     private boolean checkDate(Reservation reservation) {
         List<Reservation> allReservations = reservationRepository.findAll();
         for (Reservation r : allReservations) {
@@ -87,5 +96,13 @@ public class ReservationService {
                     (reservation.getDateFrom().isEqual(r.getDateFrom()) && reservation.getDateTo().isEqual(r.getDateTo()));
         }
         return false;
+    }
+    private void addAccessoriesToReservation(ReservationRequest reservationRequest, Reservation reservation) {
+        List<Accessory> accessories = new ArrayList<>();
+        List<Integer> accessoriesIds = reservationRequest.getAccessoriesIds();
+        for (Integer accessory : accessoriesIds) {
+            accessories.add(accessoryRepository.findById(accessory.longValue()).orElseThrow(AccessoryDoesNotExists::new));
+        }
+        reservation.setAccessories(accessories);
     }
 }
