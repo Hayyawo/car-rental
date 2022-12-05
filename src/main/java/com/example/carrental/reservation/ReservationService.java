@@ -78,7 +78,19 @@ public class ReservationService {
     public void delete(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(ReservationDoesNotExists::new);
+
+
+        reservation.setAccessories(null);
+        reservation.setCar(null);
+        List<Accessory> byReservation_id = accessoryRepository.findByReservation_Id(reservationId);
+        for (Accessory accessory : byReservation_id) {
+            accessory.setReservation(null);
+        }
+        accessoryRepository.saveAll(byReservation_id);
+        reservationRepository.save(reservation);
         reservationRepository.delete(reservation);
+
+
     }
 
     //todo nie dziala to poprawnie daty sie moga zazebiac i nie wywala bledu
@@ -86,23 +98,32 @@ public class ReservationService {
     private boolean checkDate(Reservation reservation) {
         List<Reservation> allReservations = reservationRepository.findAll();
         for (Reservation r : allReservations) {
-            return reservation.getDateFrom().isBefore(LocalDate.now()) ||
-                    reservation.getDateFrom().isEqual(r.getDateTo()) ||
-                    reservation.getDateFrom().isEqual(r.getDateFrom()) ||
-                    reservation.getDateTo().isEqual(r.getDateTo()) ||
-                    reservation.getDateTo().isEqual(r.getDateFrom()) ||
-                    reservation.getDateFrom().isBefore(r.getDateTo()) ||
-                    reservation.getDateTo().isBefore(r.getDateFrom()) ||
-                    (reservation.getDateFrom().isEqual(r.getDateFrom()) && reservation.getDateTo().isEqual(r.getDateTo()));
+            if (reservation.getDateFrom().isBefore(r.getDateFrom()) && reservation.getDateFrom().isAfter(r.getDateFrom())) {
+                System.out.println("The time stamps are overlapping");
+                return true;
+            } else if (reservation.getDateFrom().isBefore(r.getDateTo()) && reservation.getDateTo().isAfter(r.getDateTo())) {
+                System.out.println("The time stamps are overlapping");
+                return true;
+            } else if (reservation.getDateFrom().isBefore(r.getDateFrom()) && reservation.getDateTo().isAfter(r.getDateTo())) {
+                System.out.println("The time stamps are fully overlapping");
+                return true;
+            } else if (reservation.getDateFrom().isEqual(r.getDateFrom()) && reservation.getDateTo().isEqual(r.getDateTo())) {
+                System.out.println("The time stamps are overlapping");
+                return true;
+            } else if (reservation.getDateFrom().isAfter(r.getDateTo()) || reservation.getDateTo().isBefore(r.getDateFrom())) {
+                System.out.println("The time stamps are not overlapping");
+                return false;
+
+            }
         }
         return false;
     }
-    private void addAccessoriesToReservation(ReservationRequest reservationRequest, Reservation reservation) {
-        List<Accessory> accessories = new ArrayList<>();
-        List<Integer> accessoriesIds = reservationRequest.getAccessoriesIds();
-        for (Integer accessory : accessoriesIds) {
-            accessories.add(accessoryRepository.findById(accessory.longValue()).orElseThrow(AccessoryDoesNotExists::new));
+        private void addAccessoriesToReservation (ReservationRequest reservationRequest, Reservation reservation){
+            List<Accessory> accessories = new ArrayList<>();
+            List<Integer> accessoriesIds = reservationRequest.getAccessoriesIds();
+            for (Integer accessory : accessoriesIds) {
+                accessories.add(accessoryRepository.findById(accessory.longValue()).orElseThrow(AccessoryDoesNotExists::new));
+            }
+            reservation.setAccessories(accessories);
         }
-        reservation.setAccessories(accessories);
     }
-}
