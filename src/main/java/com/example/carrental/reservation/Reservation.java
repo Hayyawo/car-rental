@@ -22,7 +22,6 @@ public class Reservation {
     private LocalDate dateFrom;
     private LocalDate dateTo;
     private double totalPrice;
-    //todo jaka tu kaskade dac zeby bledem nie sypalo?
     @ManyToOne
     @JoinColumn(name = "car_id")
     private Car car;

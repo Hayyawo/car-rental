@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,9 +34,17 @@ public class AccessoryService {
 
     private static void addAccessoryToReservation(Accessory accessory, Reservation reservation) {
         List<Accessory> accessories = reservation.getAccessories();
-        accessories.add(accessory);
-        reservation.setAccessories(accessories);
-        accessory.setReservation(reservation);
+        if (!accessories.isEmpty()) {
+            for (Accessory accessory1 : accessories) {
+                if (accessory1.getId().equals(accessory.getId())) {
+                    throw new IllegalArgumentException("Accessory already added");
+                }
+            }
+        } else {
+            accessories.add(accessory);
+            reservation.setAccessories(accessories);
+            accessory.setReservation(reservation);
+        }
     }
 
     private Accessory findAccessory(AccessoryRequest accessoryRequest) {

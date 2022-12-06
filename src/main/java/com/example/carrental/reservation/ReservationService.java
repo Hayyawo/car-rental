@@ -78,23 +78,14 @@ public class ReservationService {
     public void delete(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(ReservationDoesNotExists::new);
-
-
-        reservation.setAccessories(null);
-        reservation.setCar(null);
-        List<Accessory> byReservation_id = accessoryRepository.findByReservation_Id(reservationId);
-        for (Accessory accessory : byReservation_id) {
-            accessory.setReservation(null);
-        }
-        accessoryRepository.saveAll(byReservation_id);
-        reservationRepository.save(reservation);
+        setRelationsToNull(reservationId, reservation);
         reservationRepository.delete(reservation);
 
 
     }
 
-    //todo nie dziala to poprawnie daty sie moga zazebiac i nie wywala bledu
 
+    //todo nie dziala to poprawnie daty sie moga zazebiac i nie wywala bledu
     private boolean checkDate(Reservation reservation) {
         List<Reservation> allReservations = reservationRepository.findAll();
         for (Reservation r : allReservations) {
@@ -118,7 +109,8 @@ public class ReservationService {
         }
         return false;
     }
-        private void addAccessoriesToReservation (ReservationRequest reservationRequest, Reservation reservation){
+
+    private void addAccessoriesToReservation (ReservationRequest reservationRequest, Reservation reservation){
             List<Accessory> accessories = new ArrayList<>();
             List<Integer> accessoriesIds = reservationRequest.getAccessoriesIds();
             for (Integer accessory : accessoriesIds) {
@@ -126,4 +118,13 @@ public class ReservationService {
             }
             reservation.setAccessories(accessories);
         }
+    private void setRelationsToNull(Long reservationId, Reservation reservation) {
+        reservation.setCar(null);
+        List<Accessory> accessoryList = accessoryRepository.findByReservation_Id(reservationId);
+        for (Accessory accessory : accessoryList) {
+            accessory.setReservation(null);
+        }
+        accessoryRepository.saveAll(accessoryList);
+        reservationRepository.save(reservation);
     }
+}

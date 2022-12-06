@@ -11,7 +11,6 @@ public class CarRentalApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(CarRentalApplication.class, args);
-        System.out.println(LocalDate.now());
     }
 
 }
