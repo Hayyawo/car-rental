@@ -1,14 +1,14 @@
 package com.example.carrental.car;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
 @Builder
 @Data
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class CarResponse {
     private Long id;
     private String name;

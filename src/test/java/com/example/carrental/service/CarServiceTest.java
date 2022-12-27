@@ -8,6 +8,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,17 +39,6 @@ public class CarServiceTest {
         carService.save(carRequest);
         //then
         verify(carRepository).save(car);
-    }
-
-    @Test
-    void findAll_correct() {
-        //given
-        List<Car> cars = List.of(new Car());
-        when(carRepository.findAll()).thenReturn(cars);
-        //when
-        carService.findAll();
-        //then
-        verify(carRepository).findAll();
     }
 
     @Test
@@ -106,5 +98,34 @@ public class CarServiceTest {
         //then
         verify(carRepository).findAll();
     }
+
+    @Test
+    void findSingleCar_correct() {
+        //given
+        Car car = new Car();
+        CarResponse carResponse = new CarResponse();
+        carResponse.setId(1L);
+        car.setId(1L);
+        when(carMapper.mapToDto(car)).thenReturn(carResponse);
+        when(carRepository.findById(car.getId())).thenReturn(Optional.of(car));
+        //when
+        carService.findSingleCar(car.getId());
+        //then
+        verify(carRepository).findById(car.getId());
+    }
+
+    @Test
+    void findSingleCar_throw_CarDoesNotExists() {
+        //given
+        Car car = new Car();
+        CarResponse carResponse = new CarResponse();
+        carResponse.setId(1L);
+        car.setId(1L);
+        when(carRepository.findById(car.getId())).thenReturn(Optional.empty());
+        //when
+        //then
+        Assertions.assertThrows(CarDoesNotExists.class, () -> carService.findSingleCar(car.getId()));
+    }
+
 
 }
