@@ -127,5 +127,4 @@ public class CarServiceTest {
         Assertions.assertThrows(CarDoesNotExists.class, () -> carService.findSingleCar(car.getId()));
     }
 
-
 }

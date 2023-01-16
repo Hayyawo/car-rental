@@ -7,6 +7,7 @@ import com.example.carrental.accessories.AccessoryService;
 import com.example.carrental.car.Car;
 import com.example.carrental.exceptions.AccessoryDoesNotExists;
 import com.example.carrental.exceptions.ReservationDoesNotExists;
+import com.example.carrental.price.priceforaccessory.PriceForAccessoryService;
 import com.example.carrental.reservation.Reservation;
 import com.example.carrental.reservation.ReservationRepository;
 import org.junit.jupiter.api.Assertions;
@@ -18,6 +19,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.verify;
@@ -29,25 +31,49 @@ public class AccessoryServiceTest {
     private AccessoryRepository accessoryRepository;
     @Mock
     private ReservationRepository reservationRepository;
+    @Mock
+    private PriceForAccessoryService priceForAccessoryService;
     @InjectMocks
     private AccessoryService accessoryService;
 
     @Test
-    void addAccessoryToReservation_correct() {
+    void addAccessoryToReservation_correct(){
         //given
         Accessory accessory = new Accessory();
         Reservation reservation = new Reservation();
-        accessory.setId(1L);
-        reservation.setCar(new Car());
+
+        reservation.setId(1L);
         AccessoryRequest accessoryRequest = new AccessoryRequest();
-        when(accessoryRepository.findById(accessoryRequest.getAccessoryId())).thenReturn(Optional.of(accessory));
+
+        accessory.setId(0L);
+        accessory.setReservation(reservation);
+        when(accessoryRepository.findById(accessory.getId())).thenReturn(Optional.of(accessory));
         when(reservationRepository.findById(accessoryRequest.getReservationId())).thenReturn(Optional.of(reservation));
         //when
         accessoryService.addAccessoryToReservation(accessoryRequest);
         //then
         verify(reservationRepository).save(reservation);
     }
+    @Test
+    void addAccessoryToReservation_throw_IllegalArgumentException(){
+        //given
+        Accessory accessory = new Accessory();
+        Reservation reservation = new Reservation();
 
+        reservation.setId(1L);
+        AccessoryRequest accessoryRequest = new AccessoryRequest();
+        List<Accessory> accessories = reservation.getAccessories();
+        accessories.add(accessory);
+        accessories.add(accessory);
+        accessory.setId(0L);
+        accessory.setReservation(reservation);
+        when(accessoryRepository.findById(accessory.getId())).thenReturn(Optional.of(accessory));
+        when(reservationRepository.findById(accessoryRequest.getReservationId())).thenReturn(Optional.of(reservation));
+        //when
+        //then
+        Assertions.assertThrows(IllegalArgumentException.class, () -> accessoryService.addAccessoryToReservation(accessoryRequest));
+
+    }
     @Test
     void addAccessoryToReservation_throw_AccessoryDoesNotExists() {
         //given
@@ -77,22 +103,5 @@ public class AccessoryServiceTest {
         Assertions.assertThrows(ReservationDoesNotExists.class, () -> accessoryService.addAccessoryToReservation(accessoryRequest));
     }
 
-//    @Test
-//    void addAccessoryToReservation() {
-//        //given
-//        Accessory accessory = new Accessory();
-//        Reservation reservation = new Reservation();
-//        reservation.setDateFrom(LocalDate.of(2022,11,1));
-//        reservation.setDateTo(LocalDate.of(2022,11,11));
-//        accessory.setPaidDaily(true);
-//        accessory.setId(1L);
-//        reservation.setCar(new Car());
-//        AccessoryRequest accessoryRequest = new AccessoryRequest();
-//        when(accessoryRepository.findById(accessoryRequest.getAccessoryId())).thenReturn(Optional.of(accessory));
-//        when(reservationRepository.findById(accessoryRequest.getReservationId())).thenReturn(Optional.of(reservation));
-//        //when
-//        accessoryService.addAccessoryToReservation(accessoryRequest);
-//        //then
-//        verify(reservationRepository).save(reservation);
-//    }
+
 }
